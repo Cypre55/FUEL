@@ -120,7 +120,7 @@ int KinodynamicAstar::search(Eigen::Vector3d start_pt, Eigen::Vector3d start_v, 
       for (double tau = time_res * max_tau_; tau <= max_tau_; tau += time_res * max_tau_)
         durations.push_back(tau);
     }
-
+    
     // cout << "cur state:" << cur_state.head(3).transpose() << endl;
     for (int i = 0; i < inputs.size(); ++i)
       for (int j = 0; j < durations.size(); ++j) {
@@ -206,7 +206,7 @@ int KinodynamicAstar::search(Eigen::Vector3d start_pt, Eigen::Vector3d start_v, 
             break;
           }
         }
-
+        
         // This node end up in a voxel different from others
         if (!prune) {
           if (pro_node == NULL) {
@@ -651,6 +651,7 @@ Eigen::Vector3i KinodynamicAstar::posToIndex(Eigen::Vector3d pt) {
 
 int KinodynamicAstar::timeToIndex(double time) {
   int idx = floor((time - time_origin_) * inv_time_resolution_);
+  return idx;
 }
 
 void KinodynamicAstar::stateTransit(Eigen::Matrix<double, 6, 1>& state0,

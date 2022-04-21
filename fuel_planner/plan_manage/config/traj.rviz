@@ -152,7 +152,7 @@ Visualization Manager:
           Value: false
         - Class: rviz/Image
           Enabled: true
-          Image Topic: /pcl_render_node/depth
+          Image Topic: /red/camera/depth/image_raw
           Max Value: 1
           Median window: 5
           Min Value: 0

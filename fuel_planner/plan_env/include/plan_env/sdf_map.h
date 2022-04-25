@@ -47,6 +47,7 @@ public:
   void boundBox(Eigen::Vector3d& low, Eigen::Vector3d& up);
   int getOccupancy(const Eigen::Vector3d& pos);
   int getOccupancy(const Eigen::Vector3i& id);
+  double getValue(const Eigen::Vector3d& pos);
   void setOccupied(const Eigen::Vector3d& pos, const int& occ = 1);
   int getInflateOccupancy(const Eigen::Vector3d& pos);
   int getInflateOccupancy(const Eigen::Vector3i& id);
@@ -192,6 +193,15 @@ inline void SDFMap::boundBox(Eigen::Vector3d& low, Eigen::Vector3d& up) {
     up[i] = min(up[i], mp_->box_maxd_[i]);
   }
 }
+
+inline double SDFMap::getValue(const Eigen::Vector3d& pos) {
+  Eigen::Vector3i id;
+  posToIndex(pos, id);
+  if (!isInMap(id)) return -1;
+  double occ = md_->occupancy_buffer_[toAddress(id)];
+  return occ;
+}
+
 
 inline int SDFMap::getOccupancy(const Eigen::Vector3i& id) {
   if (!isInMap(id)) return -1;

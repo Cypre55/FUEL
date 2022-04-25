@@ -63,6 +63,7 @@ int Astar::search(const Eigen::Vector3d& start_pt, const Eigen::Vector3d& end_pt
 
   /* ---------- search loop ---------- */
   while (!open_set_.empty()) {
+    // ROS_ERROR("Open Set Size: %ld", open_set_.size());
     cur_node = open_set_.top();
     bool reach_end = abs(cur_node->index(0) - end_index(0)) <= 1 &&
         abs(cur_node->index(1) - end_index(1)) <= 1 && abs(cur_node->index(2) - end_index(2)) <= 1;
@@ -91,32 +92,61 @@ int Astar::search(const Eigen::Vector3d& start_pt, const Eigen::Vector3d& end_pt
       for (double dy = -resolution_; dy <= resolution_ + 1e-3; dy += resolution_)
         for (double dz = -resolution_; dz <= resolution_ + 1e-3; dz += resolution_) {
           step << dx, dy, dz;
+          // ROS_ERROR("Step: %f, %f, %f", dx, dy, dz);
           if (step.norm() < 1e-3) continue;
           nbr_pos = cur_pos + step;
           // Check safety
-          if (!edt_env_->sdf_map_->isInBox(nbr_pos)) continue;
+          if (!edt_env_->sdf_map_->isInBox(nbr_pos)) 
+          {
+            // ROS_WARN("Continue Reason: 1");
+            continue;
+          }
           if (edt_env_->sdf_map_->getInflateOccupancy(nbr_pos) == 1 ||
               edt_env_->sdf_map_->getOccupancy(nbr_pos) == SDFMap::UNKNOWN)
+          {
+            // ROS_ERROR("Resolution %f", resolution_);
+            if (edt_env_->sdf_map_->getInflateOccupancy(nbr_pos) == 1)
+            {
+              // ROS_WARN("Continue Reason: 2a");
+            }
+            else if (edt_env_->sdf_map_->getOccupancy(nbr_pos) == SDFMap::UNKNOWN)
+            {
+              // ROS_WARN("Continue Reason: 2b");
+            }
+
+
             continue;
+          }
 
           bool safe = true;
           Vector3d dir = nbr_pos - cur_pos;
           double len = dir.norm();
           dir.normalize();
-          for (double l = 0.1; l < len; l += 0.1) {
-            Vector3d ckpt = cur_pos + l * dir;
-            if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1 ||
-                edt_env_->sdf_map_->getOccupancy(ckpt) == SDFMap::UNKNOWN) {
-              safe = false;
-              break;
-            }
+          // for (double l = 0.1; l < len; l += 0.1) {
+          //   Vector3d ckpt = cur_pos + l * dir;
+          //   if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1 ||
+          //       edt_env_->sdf_map_->getOccupancy(ckpt) == SDFMap::UNKNOWN) 
+          //   {
+          //     if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1)
+          //     cout<<"HASKDAKUJSHUJDKH\n";
+          //     safe = false;
+          //     break;
+          //   }
+          // }
+          if (!safe)
+          {
+            ROS_WARN("Continue Reason: 3");
+            continue;
           }
-          if (!safe) continue;
 
           // Check not in close set
           Eigen::Vector3i nbr_idx;
           posToIndex(nbr_pos, nbr_idx);
-          if (close_set_map_.find(nbr_idx) != close_set_map_.end()) continue;
+          if (close_set_map_.find(nbr_idx) != close_set_map_.end())
+          {
+            // ROS_WARN("Continue Reason: 4");
+            continue;
+          }
 
           NodePtr neighbor;
           double tmp_g_score = step.norm() + cur_node->g_score;
@@ -133,15 +163,20 @@ int Astar::search(const Eigen::Vector3d& start_pt, const Eigen::Vector3d& end_pt
           } else if (tmp_g_score < node_iter->second->g_score) {
             neighbor = node_iter->second;
           } else
+          {
+            // ROS_WARN("Continue Reason: 5");
             continue;
+          }
 
           neighbor->parent = cur_node;
           neighbor->g_score = tmp_g_score;
           neighbor->f_score = tmp_g_score + lambda_heu_ * getDiagHeu(nbr_pos, end_pt);
+          // ROS_ERROR("Open Set: %ld", open_set_.size());
           open_set_.push(neighbor);
           open_set_map_[nbr_idx] = neighbor;
         }
   }
+  // // ROS_WARN("Next");
   // cout << "open set empty, no path!" << endl;
   // cout << "use node num: " << use_node_num_ << endl;
   // cout << "iter num: " << iter_num_ << endl;

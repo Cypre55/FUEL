@@ -6,7 +6,7 @@
 
   <arg name="init_x" value="-10.0"/>
   <arg name="init_y" value="0.0"/>
-  <arg name="init_z" value="0.0"/> 
+  <arg name="init_z" value="2.0"/> 
 
   <!-- topic of your odometry such as VIO or LIO -->
   <arg name="odom_topic" value="/red/odometry" />

@@ -1,3 +1,8 @@
 fuel_planner/.vscode
 *.vscode/
 *.clang-format
+*.txt
+*.tsp
+*.par
+fuel_planner/exploration_manager/launch/exploration.launch
+fuel_planner/exploration_manager/launch/simulator.xml

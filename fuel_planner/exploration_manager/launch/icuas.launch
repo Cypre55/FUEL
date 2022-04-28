@@ -4,9 +4,9 @@
   <arg name="map_size_y" value="15.0"/>
   <arg name="map_size_z" value="4.5"/>
 
-  <arg name="init_x" value="-10.0"/>
-  <arg name="init_y" value="0.0"/>
-  <arg name="init_z" value="2.0"/> 
+  <arg name="init_x" default="-10.0"/>
+  <arg name="init_y" default="0.0"/>
+  <arg name="init_z" default="2.0"/> 
 
   <!-- topic of your odometry such as VIO or LIO -->
   <arg name="odom_topic" value="/red/odometry" />
@@ -59,7 +59,7 @@
     <param name="perception_utils/top_angle" value="0.56125" type="double"/>
     <param name="perception_utils/left_angle" value="0.69222" type="double"/>
     <param name="perception_utils/right_angle" value="0.68901" type="double"/>
-    <param name="perception_utils/max_dist" value="4.5" type="double"/>
+    <param name="perception_utils/max_dist" value="7" type="double"/>
     <param name="perception_utils/vis_dist" value="1.0" type="double"/>
     
 

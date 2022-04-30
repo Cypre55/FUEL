@@ -125,7 +125,7 @@ void FrontierFinder::expandFrontier(
   // std::cout << "depth: " << depth << std::endl;
   auto t1 = ros::Time::now();
 
-  ROS_INFO("Here");
+  // ROS_INFO("Here");
 
   // Data for clustering
   queue<Eigen::Vector3i> cell_queue;
@@ -137,16 +137,21 @@ void FrontierFinder::expandFrontier(
   cell_queue.push(first);
   frontier_flag_[toadr(first)] = 1;
 
-  ROS_INFO("Here");
+  // ROS_INFO("Here");
 
   // Search frontier cluster based on region growing (distance clustering)
   while (!cell_queue.empty()) {
     auto cur = cell_queue.front();
     cell_queue.pop();
+    // ROS_WARN("Not");
     auto nbrs = allNeighbors(cur);
+    // ROS_WARN("Maybe");
     for (auto nbr : nbrs) {
       // Qualified cell should be inside bounding box and frontier cell not clustered
       int adr = toadr(nbr);
+      ROS_WARN("Okay");
+      ROS_ERROR("Size: %ld", frontier_flag_);
+      ROS_ERROR("Adr: %d", adr);
       if (frontier_flag_[adr] == 1 || !edt_env_->sdf_map_->isInBox(nbr) ||
           !(knownfree(nbr) && isNeighborUnknown(nbr)))
         continue;

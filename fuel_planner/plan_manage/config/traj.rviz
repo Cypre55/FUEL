@@ -162,6 +162,18 @@ Visualization Manager:
           Transport Hint: raw
           Unreliable: false
           Value: true
+        - Class: rviz/Image
+          Enabled: true
+          Image Topic: /red/tag_image_annotated
+          Max Value: 1
+          Median window: 5
+          Min Value: 0
+          Name: depth
+          Normalize Range: true
+          Queue Size: 2
+          Transport Hint: raw
+          Unreliable: false
+          Value: true
       Enabled: true
       Name: active_perception
     - Class: rviz/Group

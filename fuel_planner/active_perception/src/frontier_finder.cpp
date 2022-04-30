@@ -125,6 +125,8 @@ void FrontierFinder::expandFrontier(
   // std::cout << "depth: " << depth << std::endl;
   auto t1 = ros::Time::now();
 
+  ROS_INFO("Here");
+
   // Data for clustering
   queue<Eigen::Vector3i> cell_queue;
   vector<Eigen::Vector3d> expanded;
@@ -134,6 +136,8 @@ void FrontierFinder::expandFrontier(
   expanded.push_back(pos);
   cell_queue.push(first);
   frontier_flag_[toadr(first)] = 1;
+
+  ROS_INFO("Here");
 
   // Search frontier cluster based on region growing (distance clustering)
   while (!cell_queue.empty()) {
@@ -146,6 +150,8 @@ void FrontierFinder::expandFrontier(
       if (frontier_flag_[adr] == 1 || !edt_env_->sdf_map_->isInBox(nbr) ||
           !(knownfree(nbr) && isNeighborUnknown(nbr)))
         continue;
+
+      ROS_INFO("Here1");
 
       edt_env_->sdf_map_->indexToPos(nbr, pos);
       if (pos[2] < 0.4) continue;  // Remove noise close to ground
@@ -161,6 +167,8 @@ void FrontierFinder::expandFrontier(
     computeFrontierInfo(frontier);
     tmp_frontiers_.push_back(frontier);
   }
+  ROS_INFO("Here");
+
 }
 
 void FrontierFinder::splitLargeFrontiers(list<Frontier>& frontiers) {

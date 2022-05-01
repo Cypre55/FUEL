@@ -1,25 +1,13 @@
-<<<<<<< Updated upstream
-NAME : single.779.tour
-COMMENT : Length = 779
-COMMENT : Found by LKH [Keld Helsgaun] Sun May  1 01:56:02 2022
+NAME : single.743.tour
+COMMENT : Length = 743
+COMMENT : Found by LKH [Keld Helsgaun] Mon May  2 03:23:58 2022
 TYPE : TOUR
-DIMENSION : 6
+DIMENSION : 5
 TOUR_SECTION
 1
-4
-5
-3
-6
-=======
-NAME : single.1666.tour
-COMMENT : Length = 1666
-COMMENT : Found by LKH [Keld Helsgaun] Sun May  1 17:00:00 2022
-TYPE : TOUR
-DIMENSION : 3
-TOUR_SECTION
-1
-3
->>>>>>> Stashed changes
 2
+4
+3
+5
 -1
 EOF

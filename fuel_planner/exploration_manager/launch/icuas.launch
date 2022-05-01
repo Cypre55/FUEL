@@ -18,11 +18,11 @@
     <arg name="map_size_y_" value="$(arg map_size_y)"/>
     <arg name="map_size_z_" value="$(arg map_size_z)"/>
 
-    <arg name="box_min_x" value="-12.0"/>
-    <arg name="box_min_y" value="-7.0"/>
+    <arg name="box_min_x" value="-12.5"/>
+    <arg name="box_min_y" value="-7.5"/>
     <arg name="box_min_z" value=" 0.0"/>
-    <arg name="box_max_x" value="12.0"/>
-    <arg name="box_max_y" value="7.0"/>
+    <arg name="box_max_x" value="12.5"/>
+    <arg name="box_max_y" value="7.5"/>
     <arg name="box_max_z" value=" 4.5"/>
 
     <arg name="odometry_topic" value="$(arg odom_topic)"/>
@@ -41,7 +41,7 @@
     <arg name="fy" value="381.36246688113556"/>
 
     <!-- maximum velocity and acceleration the drone will reach -->
-    <arg name="max_vel" value="2.0" />
+    <arg name="max_vel" value="1.0" />
     <arg name="max_acc" value="2.0" />
   </include>
 

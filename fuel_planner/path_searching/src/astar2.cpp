@@ -137,7 +137,7 @@ int Astar::search(const Eigen::Vector3d& start_pt, const Eigen::Vector3d& end_pt
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           if (!safe)
           {
-            ROS_WARN("Continue Reason: 3");
+            // ROS_WARN("Continue Reason: 3");
             continue;
           }
 

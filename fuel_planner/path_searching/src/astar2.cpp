@@ -123,17 +123,17 @@ int Astar::search(const Eigen::Vector3d& start_pt, const Eigen::Vector3d& end_pt
           double len = dir.norm();
           dir.normalize();
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-          // for (double l = 0.1; l < len; l += 0.1) {
-          //   Vector3d ckpt = cur_pos + l * dir;
-          //   if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1 ||
-          //       edt_env_->sdf_map_->getOccupancy(ckpt) == SDFMap::UNKNOWN) 
-          //   {
-          //     if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1)
-          //     cout<<"HASKDAKUJSHUJDKH\n";
-          //     safe = false;
-          //     break;
-          //   }
-          // }
+          for (double l = 0.1; l < len; l += 0.1) {
+            Vector3d ckpt = cur_pos + l * dir;
+            if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1 ||
+                edt_env_->sdf_map_->getOccupancy(ckpt) == SDFMap::UNKNOWN) 
+            {
+              if (edt_env_->sdf_map_->getInflateOccupancy(ckpt) == 1)
+              // cout<<"HASKDAKUJSHUJDKH\n";
+              safe = false;
+              break;
+            }
+          }
           ///////////////////////////////////////////////////////////////////////////////////////////////////////////
           if (!safe)
           {

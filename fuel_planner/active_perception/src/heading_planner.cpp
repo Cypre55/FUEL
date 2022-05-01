@@ -116,7 +116,7 @@ HeadingPlanner::HeadingPlanner(ros::NodeHandle& nh) {
   std::cout << "vert num: " << half_vert_num_ << std::endl;
 
   // camera FoV params
-  far_ = 7; ///// 4.5 -> 7
+  far_ = 4.5; ///// 4.5 -> 7
   // normals of hyperplanes
   const double top_ang = 0.56125;
   n_top_ << 0.0, sin(M_PI_2 - top_ang), cos(M_PI_2 - top_ang);

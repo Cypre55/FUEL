@@ -146,17 +146,21 @@ void FrontierFinder::expandFrontier(
     // ROS_WARN("Not");
     auto nbrs = allNeighbors(cur);
     // ROS_WARN("Maybe");
+    if (adr >= frontier_flag_.size())
+    {
+      ROS_WARN("[Frontier Finder]: Tried to crash");
+    }
     for (auto nbr : nbrs) {
       // Qualified cell should be inside bounding box and frontier cell not clustered
       int adr = toadr(nbr);
-      ROS_WARN("Okay");
-      ROS_ERROR("Size: %ld", frontier_flag_);
-      ROS_ERROR("Adr: %d", adr);
+      // ROS_WARN("Okay");
+      // ROS_ERROR("Size: %ld", frontier_flag_);
+      // ROS_ERROR("Adr: %d", adr);
       if (frontier_flag_[adr] == 1 || !edt_env_->sdf_map_->isInBox(nbr) ||
           !(knownfree(nbr) && isNeighborUnknown(nbr)))
         continue;
 
-      ROS_INFO("Here1");
+      // ROS_INFO("Here1");
 
       edt_env_->sdf_map_->indexToPos(nbr, pos);
       if (pos[2] < 0.4) continue;  // Remove noise close to ground
@@ -172,7 +176,7 @@ void FrontierFinder::expandFrontier(
     computeFrontierInfo(frontier);
     tmp_frontiers_.push_back(frontier);
   }
-  ROS_INFO("Here");
+  // ROS_INFO("Here");
 
 }
 

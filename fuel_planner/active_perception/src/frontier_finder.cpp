@@ -146,16 +146,17 @@ void FrontierFinder::expandFrontier(
     // ROS_WARN("Not");
     auto nbrs = allNeighbors(cur);
     // ROS_WARN("Maybe");
-    if (adr >= frontier_flag_.size())
-    {
-      ROS_WARN("[Frontier Finder]: Tried to crash");
-    }
+    
     for (auto nbr : nbrs) {
       // Qualified cell should be inside bounding box and frontier cell not clustered
       int adr = toadr(nbr);
       // ROS_WARN("Okay");
       // ROS_ERROR("Size: %ld", frontier_flag_);
       // ROS_ERROR("Adr: %d", adr);
+      if (adr >= frontier_flag_.size())
+      {
+        ROS_WARN("[Frontier Finder]: Tried to crash");
+      }
       if (frontier_flag_[adr] == 1 || !edt_env_->sdf_map_->isInBox(nbr) ||
           !(knownfree(nbr) && isNeighborUnknown(nbr)))
         continue;

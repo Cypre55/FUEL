@@ -74,6 +74,11 @@ void FastExplorationFSM::FSMCallback(const ros::TimerEvent& e) {
     }
 
     case PLAN_TRAJ: {
+      if (fd_->odom_pos_(0) > 1.){
+        transitState(FINISH, "FSM");
+        fd_->static_state_ = true;
+        break;
+      }
       if (fd_->static_state_) {
         // Plan from static state (hover)
         fd_->start_pt_ = fd_->odom_pos_;
@@ -98,13 +103,17 @@ void FastExplorationFSM::FSMCallback(const ros::TimerEvent& e) {
       // Inform traj_server the replanning
       replan_pub_.publish(std_msgs::Empty());
       int res = callExplorationPlanner();
+      
       if (res == SUCCEED) {
         transitState(PUB_TRAJ, "FSM");
-      } else if (res == NO_FRONTIER) {
-        transitState(FINISH, "FSM");
-        fd_->static_state_ = true;
-        clearVisMarker();
-      } else if (res == FAIL) {
+      }
+      ///////////// REMOVED FINISH STATE
+      // else if (res == NO_FRONTIER) {
+      //   transitState(FINISH, "FSM");
+      //   fd_->static_state_ = true;
+      //   clearVisMarker();
+      // }
+       else if (res == FAIL) {
         // Still in PLAN_TRAJ state, keep replanning
         ROS_WARN("plan fail");
         fd_->static_state_ = true;
@@ -113,6 +122,11 @@ void FastExplorationFSM::FSMCallback(const ros::TimerEvent& e) {
     }
 
     case PUB_TRAJ: {
+      if (fd_->odom_pos_(0) > 1.){
+        transitState(FINISH, "FSM");
+        fd_->static_state_ = true;
+        break;
+      }
       double dt = (ros::Time::now() - fd_->newest_traj_.start_time).toSec();
       if (dt > 0) {
         bspline_pub_.publish(fd_->newest_traj_);

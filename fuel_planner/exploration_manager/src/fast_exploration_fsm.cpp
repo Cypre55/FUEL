@@ -113,7 +113,7 @@ void FastExplorationFSM::FSMCallback(const ros::TimerEvent& e) {
       //   fd_->static_state_ = true;
       //   clearVisMarker();
       // }
-       else if (res == FAIL) {
+       else if (res == FAIL || res == NO_FRONTIER) { // if res == NO_FRONTIER keep replanning as well
         // Still in PLAN_TRAJ state, keep replanning
         ROS_WARN("plan fail");
         fd_->static_state_ = true;

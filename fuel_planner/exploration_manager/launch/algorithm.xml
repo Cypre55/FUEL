@@ -94,8 +94,8 @@
     <param name="exploration/top_view_num" value="15" type="int"/>
     <param name="exploration/vm" value="$(eval 1.0 * arg('max_vel'))" type="double"/>
     <param name="exploration/am" value="$(eval 1.0 * arg('max_acc'))" type="double"/>
-    <param name="exploration/yd" value="$(eval 60 * 3.1415926 / 180.0)" type="double"/>
-    <param name="exploration/ydd" value="$(eval 90 * 3.1415926 / 180.0)" type="double"/>
+    <param name="exploration/yd" value="$(eval 30 * 3.1415926 / 180.0)" type="double"/>
+    <param name="exploration/ydd" value="$(eval 60 * 3.1415926 / 180.0)" type="double"/>
     <param name="exploration/w_dir" value="1.5" type="double"/>
     <param name="exploration/tsp_dir" value="$(find lkh_tsp_solver)/resource" type="string"/>
     <param name="exploration/relax_time" value="1.0" type="double"/>
@@ -140,7 +140,7 @@
     <param name="manager/control_points_distance" value="0.35" type="double"/>
     <param name="manager/use_geometric_path" value="true" type="bool"/>
     <param name="manager/use_kinodynamic_path" value="true" type="bool"/>
-    <param name="manager/use_topo_path" value="true" type="bool"/>
+    <param name="manager/use_topo_path" value="false" type="bool"/>
     <param name="manager/use_optimization" value="true" type="bool"/>
     <param name="manager/use_active_perception" value="true" type="bool"/>
     <param name="manager/min_time" value="true" type="bool"/>

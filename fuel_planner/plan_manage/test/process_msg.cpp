@@ -16,7 +16,7 @@
 
 using namespace std;
 
-ros::Publisher traj_pub, traj_pub2, yaw_pub, cloud_pub, ewok_pub;
+ros::Publisher traj_pub, traj_pub2, yaw_pub, cloud_pub, ewok_pub,traj_pub_fail;
 
 ros::Time start_time, end_time, last_time;
 Eigen::Vector3d last_pos, last_acc;
@@ -249,7 +249,7 @@ int main(int argc, char** argv) {
   yaw_pub = nh.advertise<visualization_msgs::Marker>("/process_msg/execute_yaw", 10);
   cloud_pub = nh.advertise<sensor_msgs::PointCloud2>("/process_msg/global_cloud", 10);
   ewok_pub = nh.advertise<visualization_msgs::Marker>("/process_msg/ewok", 10);
-  // traj_pub2 = nh.advertise<visualization_msgs::Marker>("/process_msg/plan_traj", 10);
+  traj_pub_fail = nh.advertise<visualization_msgs::Marker>("/red/failtraj", 10);
   traj_pub2 = nh.advertise<visualization_msgs::Marker>("/planning/travel_traj", 10);
 
   last_pos.setZero();

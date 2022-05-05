@@ -55,18 +55,19 @@ int KinodynamicAstar::search(Eigen::Vector3d start_pt, Eigen::Vector3d start_v, 
     cur_node = open_set_.top();
 
     // Terminate?
+    // cout<<"Tolerance"<<tolerance<<endl;
     bool reach_horizon = (cur_node->state.head(3) - start_pt).norm() >= horizon_;
     bool near_end = abs(cur_node->index(0) - end_index(0)) <= tolerance &&
         abs(cur_node->index(1) - end_index(1)) <= tolerance &&
         abs(cur_node->index(2) - end_index(2)) <= tolerance;
-
+    // cout << abs(cur_node->index(0) - end_index(0))<<"  "<<abs(cur_node->index(1) - end_index(1))<<"  "<<abs(cur_node->index(2) - end_index(2))<<"   44444444444444444444444444444444444444444444444"<<endl;
     if (reach_horizon || near_end) {
       terminate_node = cur_node;
       retrievePath(terminate_node);
       if (near_end) {
         // Check whether shot traj exist
         estimateHeuristic(cur_node->state, end_state, time_to_goal);
-        computeShotTraj(cur_node->state, end_state, time_to_goal);
+        computeShotTraj(cur_node->state, end_state, time_to_goal); //is_shot_succ true after callingn if returned true
         if (init_search) ROS_ERROR("Shot in first search loop!");
       }
     }

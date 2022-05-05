@@ -14,7 +14,7 @@
 #include <active_perception/heading_planner.h>
 
 #include <plan_manage/plan_container.hpp>
-
+#include <visualization_msgs/MarkerArray.h>
 #include <ros/ros.h>
 
 namespace fast_planner {
@@ -44,8 +44,8 @@ public:
   void setGlobalWaypoints(vector<Eigen::Vector3d>& waypoints);
 
   bool checkTrajCollision(double& distance);
+  bool checkTrajCollision(double& distance,Eigen::Vector3d& coll,Eigen::Vector3d& traj_fail);
   void calcNextYaw(const double& last_yaw, double& yaw);
-
   PlanParameters pp_;
   LocalTrajData local_data_;
   GlobalTrajData global_data_;
@@ -61,7 +61,7 @@ private:
   unique_ptr<KinodynamicAstar> kino_path_finder_;
   vector<BsplineOptimizer::Ptr> bspline_optimizers_;
 
-  void updateTrajInfo();
+  void updateTrajInfo(int id=0);
 
   // topology guided optimization
 

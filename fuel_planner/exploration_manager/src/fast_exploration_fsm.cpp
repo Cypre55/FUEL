@@ -45,6 +45,10 @@ void FastExplorationFSM::init(ros::NodeHandle& nh) {
   replan_pub_ = nh.advertise<std_msgs::Empty>("/planning/replan", 10);
   new_pub_ = nh.advertise<std_msgs::Empty>("/planning/new", 10);
   bspline_pub_ = nh.advertise<bspline::Bspline>("/planning/bspline", 10);
+  drone_pub_ = nh.advertise<visualization_msgs::Marker>("/red/drone_buffer", 60);
+  collision_marker_pub_ = nh.advertise<visualization_msgs::MarkerArray>("/red/collision_marker", 60);
+  traj_fail_pub = nh.advertise<visualization_msgs::Marker>("/red/traj_fail", 60);
+
 }
 
 void FastExplorationFSM::FSMCallback(const ros::TimerEvent& e) {
@@ -270,7 +274,11 @@ void FastExplorationFSM::visualize() {
 
   // Draw trajectory
   // visualization_->drawSpheres({ ed_ptr->next_goal_ }, 0.3, Vector4d(0, 1, 1, 1), "next_goal", 0, 6);
+  if(info->traj_given_by_)
   visualization_->drawBspline(info->position_traj_, 0.1, Vector4d(1.0, 0.0, 0.0, 1), false, 0.15,
+                              Vector4d(1, 1, 0, 1));
+  else
+  visualization_->drawBspline(info->position_traj_, 0.1, Vector4d(1.0, 1.0, 0.0, 1), false, 0.15,
                               Vector4d(1, 1, 0, 1));
   // visualization_->drawSpheres(plan_data->kino_path_, 0.1, Vector4d(1, 0, 1, 1), "kino_path", 0, 0);
   // visualization_->drawLines(ed_ptr->path_next_goal_, 0.05, Vector4d(0, 1, 1, 1), "next_goal", 1, 6);
@@ -350,11 +358,74 @@ void FastExplorationFSM::safetyCallback(const ros::TimerEvent& e) {
   if (state_ == EXPL_STATE::EXEC_TRAJ) {
     // Check safety and trigger replan if necessary
     double dist;
-    bool safe = planner_manager_->checkTrajCollision(dist);
+    Eigen::Vector3d coll,traj_fail;
+    Eigen::Matrix3f rot;
+    bool safe = planner_manager_->checkTrajCollision(dist,coll,traj_fail);
+    visualization_msgs::Marker mk_, mk_2;
     if (!safe) {
-      ROS_WARN("Replan: collision detected==================================");
+      ROS_WARN("Replan: collision detected from FSM==================================");
       transitState(PLAN_TRAJ, "safetyCallback");
+        mk_.header.frame_id = "world";
+        mk_.header.stamp = ros::Time::now();
+        mk_.type = visualization_msgs::Marker::SPHERE;
+        mk_.action = visualization_msgs::Marker::ADD;
+        mk_.id = pts.size();
+
+
+        mk_.scale.x = 0.2;
+        mk_.scale.y = 0.2;
+        mk_.scale.z = 0.2;
+
+        mk_.color.a = 0.5;
+        mk_.color.r = 1.0;
+        mk_.color.g = 0.0;
+        mk_.color.b = 0.0;
+
+        mk_.pose.orientation.w = 1;
+        mk_.pose.orientation.x = 0;
+        mk_.pose.orientation.y = 0;
+        mk_.pose.orientation.z = 0;
+        
+        mk_.pose.position.x = coll(0);
+        mk_.pose.position.y = coll(1);
+        mk_.pose.position.z = coll(2);
+        pts.push_back(mk_);
+        visualization_msgs::MarkerArray msg;
+        msg.markers.resize(pts.size());
+        std::cout<<pts.size()<<'\n';
+        for(int i=0;i<pts.size();i++)
+        {
+            msg.markers[i] = pts[i];
+        }
+        collision_marker_pub_.publish(msg);
     }
+    // else{
+    //     mk_2.header.frame_id = "world";
+    //     mk_2.header.stamp = ros::Time::now();
+    //     mk_2.type = visualization_msgs::Marker::SPHERE;
+    //     mk_2.action = visualization_msgs::Marker::ADD;
+    //     mk_2.id = 120;
+
+
+    //     mk_2.scale.x = 0.5;
+    //     mk_2.scale.y = 0.5;
+    //     mk_2.scale.z = 0.5;
+
+    //     mk_2.color.a = 0.5;
+    //     mk_2.color.r = 0.0;
+    //     mk_2.color.g = 1.0;
+    //     mk_2.color.b = 0.0;
+
+    //     mk_2.pose.orientation.w = 1;
+    //     mk_2.pose.orientation.x = 0;
+    //     mk_2.pose.orientation.y = 0;
+    //     mk_2.pose.orientation.z = 0;
+        
+    //     mk_2.pose.position.x = traj_fail(0);
+    //     mk_2.pose.position.y = traj_fail(1);
+    //     mk_2.pose.position.z = traj_fail(2);
+    //     traj_fail_pub.publish(mk_2);
+    // }
   }
 }
 
@@ -376,6 +447,32 @@ void FastExplorationFSM::odometryCallback(const nav_msgs::OdometryConstPtr& msg)
   fd_->odom_yaw_ = atan2(rot_x(1), rot_x(0));
 
   fd_->have_odom_ = true;
+  visualization_msgs::Marker mk;
+  mk.header.frame_id = "world";
+  mk.header.stamp = ros::Time::now();
+  mk.type = visualization_msgs::Marker::CUBE;
+  mk.action = visualization_msgs::Marker::ADD;
+  mk.id = 3512;
+
+  mk.pose.position.x = fd_->odom_pos_(0);
+  mk.pose.position.y = fd_->odom_pos_(1);
+  mk.pose.position.z = fd_->odom_pos_(2);
+
+  mk.scale.x = 1;
+  mk.scale.y = 1;
+  mk.scale.z = 1;
+
+  mk.color.a = 1.0;
+  mk.color.r = 1.0;
+  mk.color.g = 0.0;
+  mk.color.b = 0.0;
+
+  mk.pose.orientation.w = fd_->odom_orient_.w();
+  mk.pose.orientation.x = fd_->odom_orient_.x();
+  mk.pose.orientation.y = fd_->odom_orient_.y();
+  mk.pose.orientation.z = fd_->odom_orient_.z();
+
+  drone_pub_.publish(mk);
 }
 
 void FastExplorationFSM::transitState(EXPL_STATE new_state, string pos_call) {

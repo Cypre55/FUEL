@@ -48,7 +48,7 @@ private:
   ros::NodeHandle node_;
   ros::Timer exec_timer_, safety_timer_, vis_timer_, frontier_timer_;
   ros::Subscriber trigger_sub_, odom_sub_;
-  ros::Publisher replan_pub_, new_pub_, bspline_pub_;
+  ros::Publisher replan_pub_, new_pub_, bspline_pub_,drone_pub_, collision_marker_pub_,traj_fail_pub;
 
   /* helper functions */
   int callExplorationPlanner();
@@ -62,6 +62,7 @@ private:
   void odometryCallback(const nav_msgs::OdometryConstPtr& msg);
   void visualize();
   void clearVisMarker();
+  vector<visualization_msgs::Marker> pts;
 
 public:
   FastExplorationFSM(/* args */) {

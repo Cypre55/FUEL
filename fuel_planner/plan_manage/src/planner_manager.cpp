@@ -112,6 +112,55 @@ bool FastPlannerManager::checkTrajCollision(double& distance) {
     }
     radius = (fut_pt - cur_pt).norm();
     fut_t += 0.02;
+
+  }
+
+  return true;
+}
+
+
+bool FastPlannerManager::checkTrajCollision(double& distance, Eigen::Vector3d &coll, Eigen::Vector3d &traj_fail) { // aadd drone buffer
+  double t_now = (ros::Time::now() - local_data_.start_time_).toSec();
+
+  Eigen::Vector3d cur_pt = local_data_.position_traj_.evaluateDeBoorT(t_now);
+  double radius = 0.0;
+  Eigen::Vector3d fut_pt;
+  double fut_t = 0.02;
+
+  while (radius < 6.0 && t_now + fut_t < local_data_.duration_) {
+    fut_pt = local_data_.position_traj_.evaluateDeBoorT(t_now + fut_t);
+    ///////////////////////////////////////////////
+    // double dist = edt_environment_->sdf_map_->getDistance(fut_pt);
+    // for(double i=-1; i<=1; i+=0.2){
+    //   for(double j=-1; j<=1; j+=0.2){
+    //     for(double k=-1; k<=1; k+=0.2){
+    //       Eigen::Vector3d tmp_pt;
+    //       tmp_pt << i, j, k;
+    //       tmp_pt += fut_pt;
+    //       if (sdf_map_->getInflateOccupancy(tmp_pt) == 1) {
+    //         distance = radius;
+    //         // std::cout << "collision at: " << fut_pt.transpose() << ", dist: " << dist << std::endl;
+    //         ROS_ERROR("vvvvvvvvvvvvvvvvvvvvvvvvCOLLISIONvvvvvvvvvvvvvvvvvv");
+    //         std::cout << "collision at: " << tmp_pt.transpose() << std::endl;
+    //         coll = tmp_pt;
+    //         return false;
+    //       }
+    //     }
+    //   }
+    // }
+    ///////////////////////////////////////////////
+    if (sdf_map_->getInflateOccupancy(fut_pt) == 1) {
+      distance = radius;
+      // std::cout << "collision at: " << fut_pt.transpose() << ", dist: " << dist << std::endl;
+      std::cout << "collision at: " << fut_pt.transpose() << std::endl;
+      ROS_ERROR("vvvvvvvvvvvvvvvvvvvvvvvvCOLLISIONvvvvvvvvvvvvvvvvvv");
+      coll=fut_pt;
+      return false;
+    }
+    ///////////////////////////////////////////////
+    radius = (fut_pt - cur_pt).norm();
+    fut_t += 0.02;
+    traj_fail = fut_pt;
   }
 
   return true;
@@ -259,7 +308,7 @@ bool FastPlannerManager::kinodynamicReplan(const Eigen::Vector3d& start_pt,
   // } else
   //   return false;
 
-  updateTrajInfo();
+  updateTrajInfo(0);
   return true;
 }
 
@@ -312,7 +361,7 @@ void FastPlannerManager::planExploreTraj(const vector<Eigen::Vector3d>& tour,
   bspline_optimizers_[0]->optimize(ctrl_pts, dt, cost_func, 1, 1);
   local_data_.position_traj_.setUniformBspline(ctrl_pts, pp_.bspline_degree_, dt);
 
-  updateTrajInfo();
+  updateTrajInfo(1);
 }
 
 // !SECTION
@@ -515,7 +564,7 @@ void FastPlannerManager::refineTraj(NonUniformBspline& best_traj) {
     std::cout << "error end  : " << (end1[i] - end2[i]).norm() << std::endl;
 }
 
-void FastPlannerManager::updateTrajInfo() {
+void FastPlannerManager::updateTrajInfo(int id) {
   local_data_.velocity_traj_ = local_data_.position_traj_.getDerivative();
   local_data_.acceleration_traj_ = local_data_.velocity_traj_.getDerivative();
 
@@ -523,6 +572,7 @@ void FastPlannerManager::updateTrajInfo() {
   local_data_.duration_ = local_data_.position_traj_.getTimeSum();
 
   local_data_.traj_id_ += 1;
+  local_data_.traj_given_by_= id;
 }
 
 void FastPlannerManager::reparamBspline(NonUniformBspline& bspline, double ratio,

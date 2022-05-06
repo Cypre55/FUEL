@@ -284,17 +284,17 @@ void MapROS::publishMapLocal() {
         else if (map_->md_->occupancy_buffer_inflate_[map_->toAddress(x, y, z)] == 1)
         {
           // Inflated occupied cells
-          Eigen::Vector3d pos;
-          map_->indexToPos(Eigen::Vector3i(x, y, z), pos);
-          if (pos(2) > visualization_truncate_height_)
-            continue;
-          if (pos(2) < visualization_truncate_low_)
-            continue;
+          // Eigen::Vector3d pos;
+          // map_->indexToPos(Eigen::Vector3i(x, y, z), pos);
+          // if (pos(2) > visualization_truncate_height_)
+          //   continue;
+          // if (pos(2) < visualization_truncate_low_)
+          //   continue;
 
-          pt.x = pos(0);
-          pt.y = pos(1);
-          pt.z = pos(2);
-          cloud2.push_back(pt);
+          // pt.x = pos(0);
+          // pt.y = pos(1);
+          // pt.z = pos(2);
+          // cloud2.push_back(pt);
         }
       }
 

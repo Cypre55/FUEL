@@ -365,39 +365,39 @@ void FastExplorationFSM::safetyCallback(const ros::TimerEvent& e) {
     if (!safe) {
       ROS_WARN("Replan: collision detected from FSM==================================");
       transitState(PLAN_TRAJ, "safetyCallback");
-        mk_.header.frame_id = "world";
-        mk_.header.stamp = ros::Time::now();
-        mk_.type = visualization_msgs::Marker::SPHERE;
-        mk_.action = visualization_msgs::Marker::ADD;
-        mk_.id = pts.size();
+        // mk_.header.frame_id = "world";
+        // mk_.header.stamp = ros::Time::now();
+        // mk_.type = visualization_msgs::Marker::SPHERE;
+        // mk_.action = visualization_msgs::Marker::ADD;
+        // mk_.id = pts.size();
 
 
-        mk_.scale.x = 0.2;
-        mk_.scale.y = 0.2;
-        mk_.scale.z = 0.2;
+        // mk_.scale.x = 0.2;
+        // mk_.scale.y = 0.2;
+        // mk_.scale.z = 0.2;
 
-        mk_.color.a = 0.5;
-        mk_.color.r = 1.0;
-        mk_.color.g = 0.0;
-        mk_.color.b = 0.0;
+        // mk_.color.a = 0.5;
+        // mk_.color.r = 1.0;
+        // mk_.color.g = 0.0;
+        // mk_.color.b = 0.0;
 
-        mk_.pose.orientation.w = 1;
-        mk_.pose.orientation.x = 0;
-        mk_.pose.orientation.y = 0;
-        mk_.pose.orientation.z = 0;
+        // mk_.pose.orientation.w = 1;
+        // mk_.pose.orientation.x = 0;
+        // mk_.pose.orientation.y = 0;
+        // mk_.pose.orientation.z = 0;
         
-        mk_.pose.position.x = coll(0);
-        mk_.pose.position.y = coll(1);
-        mk_.pose.position.z = coll(2);
-        pts.push_back(mk_);
-        visualization_msgs::MarkerArray msg;
-        msg.markers.resize(pts.size());
-        std::cout<<pts.size()<<'\n';
-        for(int i=0;i<pts.size();i++)
-        {
-            msg.markers[i] = pts[i];
-        }
-        collision_marker_pub_.publish(msg);
+        // mk_.pose.position.x = coll(0);
+        // mk_.pose.position.y = coll(1);
+        // mk_.pose.position.z = coll(2);
+        // pts.push_back(mk_);
+        // visualization_msgs::MarkerArray msg;
+        // msg.markers.resize(pts.size());
+        // std::cout<<pts.size()<<'\n';
+        // for(int i=0;i<pts.size();i++)
+        // {
+        //     msg.markers[i] = pts[i];
+        // }
+        // collision_marker_pub_.publish(msg);
     }
     // else{
     //     mk_2.header.frame_id = "world";
@@ -447,32 +447,32 @@ void FastExplorationFSM::odometryCallback(const nav_msgs::OdometryConstPtr& msg)
   fd_->odom_yaw_ = atan2(rot_x(1), rot_x(0));
 
   fd_->have_odom_ = true;
-  visualization_msgs::Marker mk;
-  mk.header.frame_id = "world";
-  mk.header.stamp = ros::Time::now();
-  mk.type = visualization_msgs::Marker::CUBE;
-  mk.action = visualization_msgs::Marker::ADD;
-  mk.id = 3512;
+  // visualization_msgs::Marker mk;
+  // mk.header.frame_id = "world";
+  // mk.header.stamp = ros::Time::now();
+  // mk.type = visualization_msgs::Marker::CUBE;
+  // mk.action = visualization_msgs::Marker::ADD;
+  // mk.id = 3512;
 
-  mk.pose.position.x = fd_->odom_pos_(0);
-  mk.pose.position.y = fd_->odom_pos_(1);
-  mk.pose.position.z = fd_->odom_pos_(2);
+  // mk.pose.position.x = fd_->odom_pos_(0);
+  // mk.pose.position.y = fd_->odom_pos_(1);
+  // mk.pose.position.z = fd_->odom_pos_(2);
 
-  mk.scale.x = 1;
-  mk.scale.y = 1;
-  mk.scale.z = 1;
+  // mk.scale.x = 1;
+  // mk.scale.y = 1;
+  // mk.scale.z = 1;
 
-  mk.color.a = 1.0;
-  mk.color.r = 1.0;
-  mk.color.g = 0.0;
-  mk.color.b = 0.0;
+  // mk.color.a = 1.0;
+  // mk.color.r = 1.0;
+  // mk.color.g = 0.0;
+  // mk.color.b = 0.0;
 
-  mk.pose.orientation.w = fd_->odom_orient_.w();
-  mk.pose.orientation.x = fd_->odom_orient_.x();
-  mk.pose.orientation.y = fd_->odom_orient_.y();
-  mk.pose.orientation.z = fd_->odom_orient_.z();
+  // mk.pose.orientation.w = fd_->odom_orient_.w();
+  // mk.pose.orientation.x = fd_->odom_orient_.x();
+  // mk.pose.orientation.y = fd_->odom_orient_.y();
+  // mk.pose.orientation.z = fd_->odom_orient_.z();
 
-  drone_pub_.publish(mk);
+  // drone_pub_.publish(mk);
 }
 
 void FastExplorationFSM::transitState(EXPL_STATE new_state, string pos_call) {

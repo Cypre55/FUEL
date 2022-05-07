@@ -64,7 +64,7 @@ double ViewNode::computeCost(const Vector3d& p1, const Vector3d& p2, const doubl
                              const Vector3d& v1, const double& yd1, vector<Vector3d>& path) {
   // Cost of position change
   double pos_cost = ViewNode::searchPath(p1, p2, path) / vm_;
-
+  float scale, heuristic;
   // Consider velocity change
   if (v1.norm() > 1e-3) {
     Vector3d dir = (p2 - p1).normalized();
@@ -76,8 +76,10 @@ double ViewNode::computeCost(const Vector3d& p1, const Vector3d& p2, const doubl
     // if (vc < 0)
     //   pos_cost += w_dir_ * 2 * fabs(vc) / am_;
   }
-
+  scale = 5;
+  heuristic = (1-p2(0))/11;
   // Cost of yaw change
+  pos_cost = pos_cost + scale*heuristic;
   double diff = fabs(y2 - y1);
   diff = min(diff, 2 * M_PI - diff);
   double yaw_cost = diff / yd_;

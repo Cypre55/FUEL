@@ -640,11 +640,11 @@ std::vector<PathNodePtr> KinodynamicAstar::getVisitedNodes() {
 }
 
 Eigen::Vector3i KinodynamicAstar::posToIndex(Eigen::Vector3d pt) {
-  Vector3i idx = ((pt - origin_) * inv_resolution_).array().floor().cast<int>();
+  Vector3i idx;// = ((pt - origin_) * inv_resolution_).array().floor().cast<int>();
 
-  // idx << floor((pt(0) - origin_(0)) * inv_resolution_), floor((pt(1) -
-  // origin_(1)) * inv_resolution_),
-  //     floor((pt(2) - origin_(2)) * inv_resolution_);
+  idx << floor((pt(0) - origin_(0)) * inv_resolution_), floor((pt(1) -
+  origin_(1)) * inv_resolution_),
+      floor((pt(2) - origin_(2)) * inv_resolution_);
 
   return idx;
 }

@@ -267,7 +267,10 @@ std::vector<Eigen::Vector3d> Astar::getVisited() {
 }
 
 void Astar::posToIndex(const Eigen::Vector3d& pt, Eigen::Vector3i& idx) {
-  idx = ((pt - origin_) * inv_resolution_).array().floor().cast<int>();
+  // idx = ((pt - origin_) * inv_resolution_).array().floor().cast<int>();
+  idx << floor((pt(0) - origin_(0)) * inv_resolution_), floor((pt(1) -
+  origin_(1)) * inv_resolution_),
+      floor((pt(2) - origin_(2)) * inv_resolution_);
 }
 
 }  // namespace fast_planner
